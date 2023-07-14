@@ -6,7 +6,7 @@ resource "null_resource" "getfile" {
 
 resource "aws_iam_saml_provider" "this" {
   name                   = "MoonswitchOktaIDP"
-  saml_metadata_document = file("saml_metadata.xml")
+  saml_metadata_document = file("${path.module}/saml_metadata.xml")
 
   depends_on = [null_resource.getfile]
 }
