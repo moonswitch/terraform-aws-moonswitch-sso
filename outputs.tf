@@ -17,3 +17,7 @@ output "readonly_role_arn" {
   value       = aws_iam_role.readonly.arn
   description = "ARN of the read-only access role"
 }
+
+output "trust_policy" {
+  value = data.aws_iam_policy_document.trust_policy.json
+}

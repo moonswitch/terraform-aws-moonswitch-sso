@@ -10,7 +10,7 @@ resource "aws_iam_saml_provider" "this" {
 data "aws_iam_policy_document" "trust_policy" {
   statement {
     effect  = "Allow"
-    actions = ["sts:AssumeRole"]
+    actions = ["sts:AssumeRoleWithSAML"]
 
     principals {
       type        = "Federated"
