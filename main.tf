@@ -4,11 +4,22 @@ resource "null_resource" "getfile" {
   }
 }
 
+resource "time_sleep" "wait_5_seconds" {
+  depends_on = [null_resource.getfile]
+
+  create_duration = "5s"
+}
+
+# This resource will create (at least) 30 seconds after null_resource.previous
+resource "null_resource" "next" {
+
+}
+
 resource "aws_iam_saml_provider" "this" {
   name                   = "MoonswitchOktaIDP"
   saml_metadata_document = file("${path.module}/saml_metadata.xml")
 
-  depends_on = [null_resource.getfile]
+  depends_on = [time_sleep.wait_5_seconds]
 }
 
 data "aws_iam_policy_document" "trust_policy" {
