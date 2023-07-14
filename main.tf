@@ -1,25 +1,10 @@
-resource "null_resource" "getfile" {
-  provisioner "local-exec" {
-    command = "curl -s -o ${path.module}/saml_metadata.xml ${var.saml_metadata_url}"
-  }
-}
-
-resource "time_sleep" "wait_5_seconds" {
-  depends_on = [null_resource.getfile]
-
-  create_duration = "5s"
-}
-
-# This resource will create (at least) 30 seconds after null_resource.previous
-resource "null_resource" "next" {
-
+data "http" "getfile" {
+  url = var.saml_metadata_url
 }
 
 resource "aws_iam_saml_provider" "this" {
   name                   = "MoonswitchOktaIDP"
-  saml_metadata_document = file("${path.module}/saml_metadata.xml")
-
-  depends_on = [time_sleep.wait_5_seconds]
+  saml_metadata_document = data.http.getfile.response_body
 }
 
 data "aws_iam_policy_document" "trust_policy" {
